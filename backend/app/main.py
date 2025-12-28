@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
 from app import models
-from app.routers import players, users, leagues
+from app.routers import players, users, leagues, teams
 
 # Create all database tables
 models.Base.metadata.create_all(bind=engine)
@@ -22,6 +22,7 @@ app.add_middleware(
 app.include_router(players.router)
 app.include_router(users.router)
 app.include_router(leagues.router)
+app.include_router(teams.router)
 
 @app.get("/")
 async def root():
@@ -29,4 +30,4 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"} #
+    return {"status": "healthy"}
