@@ -85,4 +85,4 @@ def remove_player_from_team(
         db.commit()
         return {"message": "Player removed from team"}
     else:
-        raise HTTPException(status_code=400, detail="Player not on this team")
+        raise HTTPException(status_code=400, detail="Player not on this team") #
