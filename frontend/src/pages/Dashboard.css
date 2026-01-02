@@ -198,3 +198,11 @@
 .modal-buttons button[type="button"]:hover {
   background: #ccc;
 }
+
+.draft-btn-main {
+  background: #ff6b6b;
+}
+
+.draft-btn-main:hover {
+  background: #ee5a52;
+}

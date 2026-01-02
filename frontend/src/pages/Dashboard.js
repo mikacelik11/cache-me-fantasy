@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { getMyLeagues, createLeague, joinLeague } from '../services/api';
+import Draft from './Draft';
 import './Dashboard.css';
 
 function Dashboard({ onLogout }) {
   const [leagues, setLeagues] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
+  const [showDraft, setShowDraft] = useState(false);
   const [newLeagueName, setNewLeagueName] = useState('');
   const [joinCode, setJoinCode] = useState('');
   const [teamName, setTeamName] = useState('');
@@ -17,32 +19,32 @@ function Dashboard({ onLogout }) {
   const loadLeagues = async () => {
     try {
       const response = await getMyLeagues();
-      console.log('Leagues loaded:', response.data);  // Add this line
+      console.log('Leagues loaded:', response.data);
       setLeagues(response.data);
     } catch (err) {
       console.error('Error loading leagues:', err);
-      console.error('Error details:', err.response?.data);  // Add this line
+      console.error('Error details:', err.response?.data);
     }
   };
 
   const handleCreateLeague = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await createLeague({ name: newLeagueName, max_teams: 10 });
-    const leagueCode = response.data.league_code;
-    
-    // Automatically join the league with a team
-    const teamNamePrompt = `${newLeagueName} - My Team`;
-    await joinLeague(leagueCode, teamNamePrompt);
-    
-    setShowCreateModal(false);
-    setNewLeagueName('');
-    loadLeagues();
-  } catch (err) {
-    console.error('Error creating league:', err);
-    alert('Error creating league');
-  }
-};
+    e.preventDefault();
+    try {
+      const response = await createLeague({ name: newLeagueName, max_teams: 10 });
+      const leagueCode = response.data.league_code;
+      
+      // Automatically join the league with a team
+      const teamNamePrompt = `${newLeagueName} - My Team`;
+      await joinLeague(leagueCode, teamNamePrompt);
+      
+      setShowCreateModal(false);
+      setNewLeagueName('');
+      loadLeagues();
+    } catch (err) {
+      console.error('Error creating league:', err);
+      alert('Error creating league');
+    }
+  };
 
   const handleJoinLeague = async (e) => {
     e.preventDefault();
@@ -56,6 +58,11 @@ function Dashboard({ onLogout }) {
       alert(err.response?.data?.detail || 'Error joining league');
     }
   };
+
+  // If showing draft page, render that instead
+  if (showDraft) {
+    return <Draft onBack={() => setShowDraft(false)} />;
+  }
 
   return (
     <div className="dashboard">
@@ -71,6 +78,9 @@ function Dashboard({ onLogout }) {
           </button>
           <button onClick={() => setShowJoinModal(true)} className="action-btn">
             Join League
+          </button>
+          <button onClick={() => setShowDraft(true)} className="action-btn draft-btn-main">
+            🏀 Draft Players
           </button>
         </div>
 
