@@ -47,7 +47,7 @@ function Dashboard({ onLogout }) {
   };
 
   const handleJoinLeague = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); //
     try {
       await joinLeague(joinCode, teamName);
       setShowJoinModal(false);
@@ -161,4 +161,4 @@ function Dashboard({ onLogout }) {
   );
 }
 
-export default Dashboard;
+export default Dashboard; 
