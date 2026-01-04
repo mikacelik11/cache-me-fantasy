@@ -15,8 +15,11 @@ if DATABASE_URL.startswith("postgres://"):
 
 print(f"Connecting to database: {DATABASE_URL[:30]}...")  # Debug print
 
-# Create engine
-engine = create_engine(DATABASE_URL)
+# Create engine with SSL required for Render PostgreSQL
+engine = create_engine(
+    DATABASE_URL,
+    connect_args={"sslmode": "require"}  # This is the fix!
+)
 
 # Session
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
