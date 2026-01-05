@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import engine
+from app.database import engine, SessionLocal
 from app import models
 from app.routers import players, users, leagues, teams
 
@@ -9,12 +9,14 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Cache Me Fantasy API")
 
-# CORS configuration - Add port 3001!
+# CORS configuration
 origins = [
     "http://localhost:3000",
-    "http://localhost:3001",  # Add this line!
+    "http://localhost:3001",
     "http://127.0.0.1:3000",
-    "http://127.0.0.1:3001",  # Add this line!
+    "http://127.0.0.1:3001",
+    "https://cache-me-fantasy.vercel.app",
+    "https://*.vercel.app",
 ]
 
 app.add_middleware(
@@ -26,7 +28,23 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
-# Include routers AFTER CORS middleware
+# Seed players on startup if database is empty
+@app.on_event("startup")
+async def startup_event():
+    db = SessionLocal()
+    try:
+        player_count = db.query(models.Player).count()
+        if player_count == 0:
+            print("Database is empty, seeding NBA players...")
+            from app.add_all_nba_players import add_all_nba_players
+            add_all_nba_players()
+            print("Players seeded successfully!")
+        else:
+            print(f"Database already has {player_count} players")
+    finally:
+        db.close()
+
+# Include routers
 app.include_router(users.router)
 app.include_router(players.router)
 app.include_router(leagues.router)
