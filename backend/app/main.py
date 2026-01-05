@@ -15,8 +15,8 @@ origins = [
     "http://localhost:3001",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:3001",
-    "https://cache-me-fantasy.vercel.app",
-    "https://*.vercel.app",
+    "https://cache-me-fantasy.vercel.app",  # Production URL
+    "https://cache-me-fantasy-dcpu0m3b9-mikaels-projects-9a5fce72.vercel.app",  # Preview URL
 ]
 
 app.add_middleware(
