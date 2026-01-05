@@ -22,3 +22,10 @@ def get_player(player_id: int, db: Session = Depends(get_db)):
 def get_available_players(db: Session = Depends(get_db)):
     players = db.query(models.Player).filter(models.Player.is_available == True).all()
     return players
+
+@router.post("/seed-players")
+async def seed_players_manually():
+    """Manually trigger player seeding"""
+    from app.add_all_nba_players import add_all_nba_players
+    add_all_nba_players()
+    return {"message": "Player seeding triggered"}
