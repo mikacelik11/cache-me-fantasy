@@ -34,13 +34,11 @@ async def startup_event():
     db = SessionLocal()
     try:
         player_count = db.query(models.Player).count()
-        if player_count == 0:
-            print("Database is empty, seeding NBA players...")
-            from app.add_all_nba_players import add_all_nba_players
-            add_all_nba_players()
-            print("Players seeded successfully!")
-        else:
-            print(f"Database already has {player_count} players")
+        print(f"Database currently has {player_count} players")
+        print("Running player seed script...")
+        from app.add_all_nba_players import add_all_nba_players
+        add_all_nba_players()
+        print("Player seeding complete!")
     finally:
         db.close()
 
